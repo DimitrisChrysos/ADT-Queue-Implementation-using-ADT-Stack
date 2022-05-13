@@ -30,7 +30,7 @@ int queue_size(Queue queue) {
 }
 
 Pointer queue_front(Queue queue) {
-	return queue->stack_front;	// Needs work, that's why test_insert does not work!!!
+	return queue->stack_front;
 }
 
 Pointer queue_back(Queue queue) {
@@ -46,21 +46,17 @@ void queue_insert_back(Queue queue, Pointer value) {
 }
 
 void queue_remove_front(Queue queue) {
-	Vector vector = vector_create(queue_size(queue), NULL);
-	while (queue_size(queue) != 0)  {
-		Pointer value = queue_back(queue);
-		vector_insert_last(vector, value);
+	Vector vector = vector_create(queue_size(queue) - 1, NULL);
+	for (int i = queue_size(queue) - 2 ; i >=0 ; i--)  {		// i = queue_size(queue) - 2, to not add the first value of the stack to the vector
+		Pointer value = stack_top(queue->stack);
+		vector_set_at(vector, i, value);
 		stack_remove_top(queue->stack);
 	}
-	vector_remove_last(vector);
-	int new_size = vector_size(vector);
-	int i = new_size-1;
-	while (queue_size(queue) != new_size)  {
+	stack_remove_top(queue->stack);		// to remove the last one remaining from the stack
+	for (int i = 0 ; i < vector_size(vector) ; i++)  {
 		Pointer value = vector_get_at(vector, i);
-		i--;
-		stack_insert_top(queue->stack, value);
+		queue_insert_back(queue, value);
 	}
-
 	vector_destroy(vector);
 }
 

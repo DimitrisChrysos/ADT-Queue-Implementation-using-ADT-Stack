@@ -29,7 +29,7 @@ __Α.Μ.__: sdi???????
 
 Άσκηση 1:
 
-~Πολυπλοκότητες:
+~ Πολυπλοκότητες:
 - queue_create -> O(1)
 - queue_size -> O(1)
 - queue_front -> O(1)
@@ -38,3 +38,40 @@ __Α.Μ.__: sdi???????
 - queue_remove_front -> O(n)
 - queue_set_destroy_value -> O(1)
 - queue_destroy -> O(1)
+
+
+
+Άσκηση 2:
+
+~ Σύγκριση Πολυπλοκότητων:
+- queue_create
+ασκ1 -> O(1)
+ασκ2 -> O(1)
+
+- queue_size
+ασκ1 -> O(1)
+ασκ2 -> O(1)
+
+- queue_front
+ασκ1 -> O(1)
+ασκ2 -> O(1)
+
+- queue_back
+ασκ1 -> O(1)
+ασκ2 -> O(1)
+
+- queue_insert_back
+ασκ1 -> O(1)
+ασκ2 -> O(1)
+
+- queue_remove_front
+ασκ1 -> O(n)
+ασκ2 -> O(1) (Πολύ πιο σπάνια χρησιμοποιήται το for για το copy μεταξύ των 2 στοιβών, άρα έχει real time O(n), αλλά amortized time O(1))
+
+- queue_set_destroy_value
+ασκ1 -> O(1)
+ασκ2 -> O(1)
+
+- queue_destroy
+ασκ1 -> O(1)
+ασκ2 -> O(1)

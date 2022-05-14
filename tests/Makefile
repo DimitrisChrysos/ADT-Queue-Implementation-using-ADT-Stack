@@ -7,6 +7,8 @@
 #
 UsingADTStack_ADTQueue_test_OBJS = ADTQueue_test.o $(MODULES)/UsingADTStack/ADTQueue.o $(MODULES)/UsingADTList/ADTStack.o $(MODULES)/UsingLinkedList/ADTList.o $(MODULES)/UsingDynamicArray/ADTVector.o
 
+UsingADTStack_ADTQueue_alt_test_OBJS = ADTQueue_test.o $(MODULES)/UsingADTStack/ADTQueue_alt.o $(MODULES)/UsingADTList/ADTStack.o $(MODULES)/UsingLinkedList/ADTList.o $(MODULES)/UsingDynamicArray/ADTVector.o
+
 # Υλοποιήσεις μέσω ADTList: ADTQueue
 # Πέρα από το .o της κάθε υλοποίησης (πχ ADTStack.o), χρειάζεται και μια υλοποίηση του ίδιου του ADTList!
 #

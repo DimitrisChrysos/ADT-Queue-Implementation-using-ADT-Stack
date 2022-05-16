@@ -75,3 +75,21 @@ __Α.Μ.__: sdi???????
 - queue_destroy
 ασκ1 -> O(1)
 ασκ2 -> O(1)
+
+
+
+
+
+
+Άσκηση 3:
+
+need to type "make" on folder 
+/Documents/2022-project-2-DimitrisChrysos/programs/queue_benchmark
+
+run:
+a) ./queue_benchmark_using_stack_alt real
+b) ./queue_benchmark_using_stack_alt amortized
+c) ./queue_benchmark_using_stack real
+d) ./queue_benchmark_using_stack amortized
+e) ./queue_benchmark_using_list real
+f) ./queue_benchmark_using_list amortized

@@ -26,6 +26,11 @@ typedef struct queue* Queue;
 
 Queue queue_create(DestroyFunc destroy_value);
 
+// Επιστρέφει τον αριθμό βημάτων που πραγματοποίησε η συνάρτηση
+// queue_* που κλήθηκε τελευταία (όποια και να ήταν αυτή).
+
+int queue_steps(Queue queue);
+
 // Επιστρέφει τον αριθμό στοιχείων που περιέχει η ουρά queue
 
 int queue_size(Queue queue);

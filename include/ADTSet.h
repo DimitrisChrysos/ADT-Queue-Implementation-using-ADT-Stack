@@ -12,6 +12,8 @@
 
 #include "common_types.h"
 
+#include "ADTVector.h"
+
 
 // Ενα σύνολο αναπαριστάται από τον τύπο Set
 
@@ -23,6 +25,10 @@ typedef struct set* Set;
 // Αν destroy_value != NULL, τότε καλείται destroy_value(value) κάθε φορά που αφαιρείται ένα στοιχείο.
 
 Set set_create(CompareFunc compare, DestroyFunc destroy_value);
+
+// Η συνάρτηση αυτή δημιουργεί ένα set, το οποίο περιέχει τα στοιχεία του vector values, τα οποία πρέπει 
+// να δίνονται ταξινομημένα σε αύξουσα σειρά.
+Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value, Vector values);
 
 // Επιστρέφει τον αριθμό στοιχείων που περιέχει το σύνολο set.
 

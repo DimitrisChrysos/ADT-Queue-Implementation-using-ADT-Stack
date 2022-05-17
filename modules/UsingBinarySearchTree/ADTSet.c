@@ -8,6 +8,7 @@
 #include <assert.h>
 
 #include "ADTSet.h"
+#include "ADTVector.h"
 
 
 // Υλοποιούμε τον ADT Set μέσω BST, οπότε το struct set είναι ένα Δυαδικό Δέντρο Αναζήτησης.
@@ -255,6 +256,46 @@ Set set_create(CompareFunc compare, DestroyFunc destroy_value) {
 	set->size = 0;
 	set->compare = compare;
 	set->destroy_value = destroy_value;
+
+	return set;
+}
+
+
+SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNode start, VectorNode end, CompareFunc compare)  {
+	Pointer start_value = vector_node_value(values, start);
+	Pointer end_value = vector_node_value(values, end);
+	if (set->compare(start_value, end_value) > 0)  {
+		return NULL;
+	}
+
+	int middle = vector_size(values) / 2;
+	Pointer value_of_middle = vector_get_at(values, middle);
+	Pointer middle_node = vector_find_node(values, value_of_middle, compare);
+	set->root->value = value_of_middle;
+
+	VectorNode new_end = vector_previous(values, middle_node);
+	set->root->left = init_set_from_vector_with_balanced_tree(set, values, start, new_end, compare);
+
+	VectorNode new_start = vector_next(values, middle_node);
+	set->root->left = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
+
+	return set->root;
+}
+
+Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value, Vector values) {
+	assert(compare != NULL);	// LCOV_EXCL_LINE
+
+	// δημιουργούμε το stuct
+	Set set = malloc(sizeof(*set));
+	set->root = NULL;			// κενό δέντρο
+	set->size = 0;
+	set->compare = compare;
+	set->destroy_value = destroy_value;
+
+	VectorNode start = vector_node_value(values, vector_first(values));
+	VectorNode end = vector_node_value(values, vector_last(values));
+	init_set_from_vector_with_balanced_tree(set, values, start, end, compare);
+	
 
 	return set;
 }

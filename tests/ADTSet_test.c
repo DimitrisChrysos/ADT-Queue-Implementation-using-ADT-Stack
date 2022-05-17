@@ -9,6 +9,8 @@
 
 #include "ADTSet.h"
 
+#include "ADTVector.h"
+
 
 // Η συνάρτηση αυτή δεν υπάρχει στο public interface του Set αλλά χρησιμεύει
 // στα tests, για να ελέγχει αν το set είναι σωστό μετά από κάθε λειτουργία.

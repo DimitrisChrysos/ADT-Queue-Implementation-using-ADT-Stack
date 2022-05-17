@@ -112,7 +112,7 @@ f) ./queue_benchmark_using_list amortized
 - queue_benchmark_using_stack_alt amortized:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1), αφού κυριαρχή η πολυπλότητα σε μεγάλο χρόνο O(1) και διαιρείται με n, που το n συνέχεια αυξάνεται κάτα ένα.
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160324.png
+![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160324.png)
 
 - queue_benchmark_using_list real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1).

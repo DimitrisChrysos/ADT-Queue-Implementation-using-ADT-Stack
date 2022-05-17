@@ -95,4 +95,4 @@ e) ./queue_benchmark_using_list real
 f) ./queue_benchmark_using_list amortized
 
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/tree/master/programs/queue_benchmark/images_for_README)
+![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20153529.png)

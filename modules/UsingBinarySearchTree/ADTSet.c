@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 #include "ADTSet.h"
 #include "ADTVector.h"
@@ -265,6 +266,8 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 	int pos_start = 0;
 	int pos_end = vector_size(values) - 1;
 	int i = 0;
+
+	// to find where start and end is
 	for (VectorNode node = vector_first(values) ; node != vector_next(values, start) ; node = vector_next(values, node))  {
 		if (vector_node_value(values, node) == vector_node_value(values, start))  {
 			pos_start = i;
@@ -272,38 +275,44 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 		i++;
 	}
 	i = 0;
-	for (VectorNode node = start ; node != vector_next(values, end) ; node = vector_next(values, node))  {
-		//	μάλλον πρέπει να κάνω πράγματα εδώ
-		// if (pos_end == pos_start)  {
-
-		// }
+	for (VectorNode node = vector_first(values) ; node != vector_next(values, end) ; node = vector_next(values, node))  {
+		if (pos_end == pos_start)  {
+			break;
+		}
 		else if (vector_node_value(values, node) == vector_node_value(values, end))  {
 			pos_end = i;
 		}
 		i++;
 	}
 
+	// to stop
 	if (pos_start > pos_end)  {
 		return NULL;
 	}
 
-	int middle = (pos_start + pos_end + 1) / 2;
+	// recursive work
+	int middle = (pos_start + pos_end) / 2;
 	Pointer value_of_middle = vector_get_at(values, middle);
 	VectorNode middle_node = vector_find_node(values, value_of_middle, compare);
 	SetNode root = node_create(value_of_middle);
-	set->size += 2;
+	set->size += 1;
 
-	
 	VectorNode new_end = vector_previous(values, middle_node);
-	if (new_end != NULL)  {
-		root->left = init_set_from_vector_with_balanced_tree(set, values, start, new_end, compare);
-	}
-
 	VectorNode new_start = vector_next(values, middle_node);
-	if (new_start != NULL)  {
-		root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
+	if (set->size < vector_size(values))  {
+		if (new_end != NULL)  {
+			root->left = init_set_from_vector_with_balanced_tree(set, values, start, new_end, compare);
+		}
+		else if (vector_size(values) == 2)  {
+			root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
+			return root;
+		}
+		else return root;
+		if (new_start != NULL)  {
+			root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
+		}
+		else return root;
 	}
-
 	
 	return root;
 }

@@ -69,7 +69,7 @@ void test_create(void) {
 
 void test_set_create_from_sorted_values(void) {
 	Vector values = vector_create(0, NULL);
-	for (int i = 0 ; i < 4 ; i++)  {
+	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i+1);
 		vector_insert_last(values, temp_value);
 	}
@@ -78,7 +78,7 @@ void test_set_create_from_sorted_values(void) {
 	set_set_destroy_value(set, NULL);
 
 	TEST_ASSERT(set != NULL);
-	TEST_ASSERT(set_size(set) == 4);
+	TEST_ASSERT(set_size(set) == 1000);
 
 	set_destroy(set);
 }

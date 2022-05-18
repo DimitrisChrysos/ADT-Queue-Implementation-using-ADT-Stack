@@ -67,6 +67,22 @@ void test_create(void) {
 	set_destroy(set);
 }
 
+void test_set_create_from_sorted_values(void) {
+	Vector values = vector_create(0, NULL);
+	for (int i = 0 ; i < 4 ; i++)  {
+		Pointer temp_value = create_int(i+1);
+		vector_insert_last(values, temp_value);
+	}
+
+	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
+	set_set_destroy_value(set, NULL);
+
+	TEST_ASSERT(set != NULL);
+	TEST_ASSERT(set_size(set) == 4);
+
+	set_destroy(set);
+}
+
 void test_insert(void) {
 
 	Set set = set_create(compare_ints, free);
@@ -301,6 +317,7 @@ void test_node_value(void) {
 // Λίστα με όλα τα tests προς εκτέλεση
 TEST_LIST = {
 	{ "set_create", 	test_create 	},
+	{ "test_set_create_from_sorted_values", 	test_set_create_from_sorted_values 	},
 	{ "set_insert", 	test_insert 	},
 	{ "set_remove", 	test_remove 	},
 	{ "set_find", 		test_find 		},

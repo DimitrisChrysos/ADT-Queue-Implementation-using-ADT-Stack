@@ -262,40 +262,58 @@ Set set_create(CompareFunc compare, DestroyFunc destroy_value) {
 
 
 SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNode start, VectorNode end, CompareFunc compare)  {
-	Pointer start_value = vector_node_value(values, start);
-	Pointer end_value = vector_node_value(values, end);
-	if (set->compare(start_value, end_value) > 0)  {
+	int pos_start = 0;
+	int pos_end = vector_size(values) - 1;
+	int i = 0;
+	for (VectorNode node = vector_first(values) ; node != vector_next(values, start) ; node = vector_next(values, node))  {
+		if (vector_node_value(values, node) == vector_node_value(values, start))  {
+			pos_start = i;
+		}
+		i++;
+	}
+	i = 0;
+	for (VectorNode node = start ; node != vector_next(values, end) ; node = vector_next(values, node))  {
+		//	μάλλον πρέπει να κάνω πράγματα εδώ
+		// if (pos_end == pos_start)  {
+
+		// }
+		else if (vector_node_value(values, node) == vector_node_value(values, end))  {
+			pos_end = i;
+		}
+		i++;
+	}
+
+	if (pos_start > pos_end)  {
 		return NULL;
 	}
 
-	int middle = vector_size(values) / 2;
+	int middle = (pos_start + pos_end + 1) / 2;
 	Pointer value_of_middle = vector_get_at(values, middle);
-	Pointer middle_node = vector_find_node(values, value_of_middle, compare);
-	set->root->value = value_of_middle;
+	VectorNode middle_node = vector_find_node(values, value_of_middle, compare);
+	SetNode root = node_create(value_of_middle);
+	set->size += 2;
 
+	
 	VectorNode new_end = vector_previous(values, middle_node);
-	set->root->left = init_set_from_vector_with_balanced_tree(set, values, start, new_end, compare);
+	if (new_end != NULL)  {
+		root->left = init_set_from_vector_with_balanced_tree(set, values, start, new_end, compare);
+	}
 
 	VectorNode new_start = vector_next(values, middle_node);
-	set->root->left = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
+	if (new_start != NULL)  {
+		root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
+	}
 
-	return set->root;
+	
+	return root;
 }
 
 Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value, Vector values) {
-	assert(compare != NULL);	// LCOV_EXCL_LINE
+	Set set = set_create(compare, destroy_value);
 
-	// δημιουργούμε το stuct
-	Set set = malloc(sizeof(*set));
-	set->root = NULL;			// κενό δέντρο
-	set->size = 0;
-	set->compare = compare;
-	set->destroy_value = destroy_value;
-
-	VectorNode start = vector_node_value(values, vector_first(values));
-	VectorNode end = vector_node_value(values, vector_last(values));
-	init_set_from_vector_with_balanced_tree(set, values, start, end, compare);
-	
+	VectorNode start = vector_first(values);
+	VectorNode end = vector_last(values);
+	set->root = init_set_from_vector_with_balanced_tree(set, values, start, end, compare);
 
 	return set;
 }

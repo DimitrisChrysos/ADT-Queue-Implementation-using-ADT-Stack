@@ -294,7 +294,6 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 	int middle = (pos_start + pos_end) / 2;
 	Pointer value_of_middle = vector_get_at(values, middle);
 	VectorNode middle_node = vector_find_node(values, value_of_middle, compare);
-	printf("~ node = %d\n", *(int*)value_of_middle);
 	SetNode root = node_create(value_of_middle);
 	set->size += 1;
 
@@ -308,13 +307,11 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 			root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
 			return root;
 		}
-		// else return root;
 		if (new_start != NULL)  {
 			root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, compare);
 		}
 		else return root;
 	}
-	
 	return root;
 }
 
@@ -324,11 +321,6 @@ Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value
 	VectorNode start = vector_first(values);
 	VectorNode end = vector_last(values);
 	set->root = init_set_from_vector_with_balanced_tree(set, values, start, end, compare);
-	
-	// for (SetNode node = set_first(set); node != SET_EOF ; node = set_next(set, node))  {
-	// 	Pointer temp_value = set_node_value(set, node);
-	// 	printf("~ value = %d\n", *(int*)temp_value);
-	// }
 	
 	return set;
 }

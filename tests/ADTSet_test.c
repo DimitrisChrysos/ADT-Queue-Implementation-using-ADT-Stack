@@ -305,8 +305,7 @@ void test_node_value(void) {
 
 void test_set_create_from_sorted_values(void) {
 	Vector values = vector_create(0, NULL);
-	int temp = 23;
-	for (int i = 0 ; i < temp ; i++)  {
+	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i+1);
 		vector_insert_last(values, temp_value);
 	}
@@ -315,110 +314,122 @@ void test_set_create_from_sorted_values(void) {
 	set_set_destroy_value(set, NULL);
 
 	TEST_ASSERT(set != NULL);
-	TEST_ASSERT(set_size(set) == temp);
+	TEST_ASSERT(set_size(set) == 1000);
 	TEST_ASSERT(set_is_proper(set));
 
 	set_destroy(set);
+	vector_destroy(values);
 }
 
-// void test_insert_fsv(void) {
-// 	Vector values = vector_create(0, NULL);
-// 	for (int i = 0 ; i < 1000 ; i++)  {
-// 		Pointer temp_value = create_int(i+1);
-// 		vector_insert_last(values, temp_value);
-// 	}
+void test_insert_fsv(void) {
+	Vector values = vector_create(0, NULL);
+	for (int i = 0 ; i < 10 ; i++)  {
+		Pointer temp_value = create_int(i);
+		vector_insert_last(values, temp_value);
+	}
 
-// 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
+	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
 
-// 	int N = 1000;
+	int N = 1000;
 
-// 	int** value_array = malloc(N * sizeof(*value_array));
+	int** value_array = malloc(N * sizeof(*value_array));
 
-// 	// Δοκιμάζουμε την insert με νέες τιμές κάθε φορά και με αυτόματο free
-// 	for (int i = 0; i < N; i++) {
+	// Δοκιμάζουμε την insert με νέες τιμές κάθε φορά και με αυτόματο free
+	for (int i = 0; i < N; i++) {
 		
-// 		value_array[i] = create_int(i);
+		// προσθέτουμε 11 γιατί από το vector έχουν ήδη μπει τα στοιχεία {0, ..., 9}
+		value_array[i] = create_int(i + 10);
 
-// 		insert_and_test(set, value_array[i]);
+		insert_and_test(set, value_array[i]);
 
-// 		TEST_ASSERT(set_size(set) == (i + 1));
+		// γιατί είδη έχουν μπει 10 στοιχεία από το vector και βάζουμε άλλο ένα
+		TEST_ASSERT(set_size(set) == (10 + i + 1));
+		
+	}
 
-// 	}
+	// Δοκιμάζουμε την insert με τιμές που υπάρχουν ήδη στο Set
+	// και ελέγχουμε ότι δεν ενημερώθηκε το size (καθώς δεν προστέθηκε νέος κόμβος)
+	int* new_value = create_int(0);
+	insert_and_test(set, new_value);
 
-// 	// Δοκιμάζουμε την insert με τιμές που υπάρχουν ήδη στο Set
-// 	// και ελέγχουμε ότι δεν ενημερώθηκε το size (καθώς δεν προστέθηκε νέος κόμβος)
-// 	int* new_value = create_int(0);
-// 	insert_and_test(set, new_value);
+	TEST_ASSERT(set_size(set) == N + 10);	// +10 στοιχεία από το vector
 
-// 	TEST_ASSERT(set_size(set) == N);
+	set_destroy(set);
 
-// 	set_destroy(set);
-
-// 	// Δοκιμάζουμε την insert χωρίς αυτόματο free
-// 	Set set2 = set_create_from_sorted_values(compare_ints, NULL, values);
+	// Δοκιμάζουμε την insert χωρίς αυτόματο free
+	Set set2 = set_create_from_sorted_values(compare_ints, NULL, values);
 	
-// 	int local_value1 = 0, local_value2 = 1, local_value3 = 1;
+	int local_value1 = 0, local_value2 = 1, local_value3 = 1;
 
-// 	insert_and_test(set2, &local_value1);
-// 	insert_and_test(set2, &local_value2);
-// 	insert_and_test(set2, &local_value3);		// ισοδύναμη τιμή => replace
+	insert_and_test(set2, &local_value1);
+	insert_and_test(set2, &local_value2);
+	insert_and_test(set2, &local_value3);		// ισοδύναμη τιμή => replace
 	
-// 	set_destroy(set2);
-// 	free(value_array);
+	set_destroy(set2);
+	free(value_array);
+	vector_destroy(values);
+}
 
-// }
 
+void test_remove_fsv(void) {
+	Vector values = vector_create(0, NULL);
+	for (int i = 0 ; i < 1000 ; i++)  {
+		Pointer temp_value = create_int(i+1);
+		vector_insert_last(values, temp_value);
+	}
 
-// void test_remove_fsv(void) {
-// 	Vector values = vector_create(0, NULL);
-// 	for (int i = 0 ; i < 1000 ; i++)  {
-// 		Pointer temp_value = create_int(i+1);
-// 		vector_insert_last(values, temp_value);
-// 	}
+	Set set = set_create_from_sorted_values(compare_ints, free, values);
 
-// 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
+	int N = 1000;
 
-// 	int N = 1000;
+	int** value_array = malloc(N * sizeof(*value_array));
 
-// 	int** value_array = malloc(N * sizeof(*value_array));
+	for (int i = 0; i < N; i++)
+		value_array[i] = create_int(i);
 
-// 	for (int i = 0; i < N; i++)
-// 		value_array[i] = create_int(i);
+	// Ανακατεύουμε το value_array ώστε να υπάρχει ομοιόμορφη εισαγωγή τιμών
+	// Πχ εάν εισάγουμε δείκτες με αύξουσα σειρά τιμών, τότε εάν το Set υλοποιείται με BST,
+	// οι κόμβοι θα προστίθενται μόνο δεξιά της ρίζας, άρα και η set_remove δεν θα δοκιμάζεται πλήρως
+	shuffle(value_array, N);
 
-// 	// Ανακατεύουμε το value_array ώστε να υπάρχει ομοιόμορφη εισαγωγή τιμών
-// 	// Πχ εάν εισάγουμε δείκτες με αύξουσα σειρά τιμών, τότε εάν το Set υλοποιείται με BST,
-// 	// οι κόμβοι θα προστίθενται μόνο δεξιά της ρίζας, άρα και η set_remove δεν θα δοκιμάζεται πλήρως
-// 	shuffle(value_array, N);
+	for (int i = 0; i < N; i++)
+		set_insert(set, value_array[i]);
 
-// 	for (int i = 0; i < N; i++)
-// 		set_insert(set, value_array[i]);
+	// Δοκιμάζουμε, πριν διαγράψουμε κανονικά τους κόμβους, ότι η set_remove
+	// διαχειρίζεται σωστά μια τιμή που δεν υπάρχει στο Set
+	int not_exists = 2000;
+	TEST_ASSERT(!set_remove(set, &not_exists));
 
-// 	// Δοκιμάζουμε, πριν διαγράψουμε κανονικά τους κόμβους, ότι η set_remove
-// 	// διαχειρίζεται σωστά μια τιμή που δεν υπάρχει στο Set
-// 	int not_exists = 2000;
-// 	TEST_ASSERT(!set_remove(set, &not_exists));
+	// Διαγράφουμε όλους τους κόμβους
+	for (int i = 0; i < N; i++) {
+		TEST_ASSERT(set_remove(set, value_array[i]));
+		TEST_ASSERT(set_is_proper(set));
+	}
 
-// 	// Διαγράφουμε όλους τους κόμβους
-// 	for (int i = 0; i < N; i++) {
-// 		TEST_ASSERT(set_remove(set, value_array[i]));
-// 		TEST_ASSERT(set_is_proper(set));
-// 	}
+	set_destroy(set);
+	vector_destroy(values);
 
-// 	set_destroy(set);
+	// Δοκιμάζουμε τη remove χωρίς αυτόματο free
+	Vector values2 = vector_create(0, NULL);
+	for (int i = 0 ; i < 1000 ; i++)  {
+		Pointer temp_value = create_int(i+1);
+		vector_insert_last(values2, temp_value);
+	}
+	Set set2 = set_create_from_sorted_values(compare_ints, NULL, values2);
 
-// 	// Δοκιμάζουμε τη remove χωρίς αυτόματο free
-// 	Set set2 = set_create(compare_ints, NULL);
+	// τα vector values2 ξεκινάνε είναι από {1, ..., 10} σύμφωνα με την αρχικοποίηση του
+	// vector που κάναμε πριν άρα δεν υπάρχει θέμα να προσθέσουμε την τιμή 0 
+	int local_value1 = 0;
+
+	insert_and_test(set2, &local_value1);
+	TEST_ASSERT(set_remove(set2, &local_value1));
+	TEST_ASSERT(set_is_proper(set2));
+	TEST_ASSERT(set_size(set2) == 0 + 1000);	// +1000 στοιχεία από το vector
 	
-// 	int local_value1 = 0;
-
-// 	insert_and_test(set2, &local_value1);
-// 	TEST_ASSERT(set_remove(set2, &local_value1));
-// 	TEST_ASSERT(set_is_proper(set2));
-// 	TEST_ASSERT(set_size(set2) == 0);
-	
-// 	set_destroy(set2);
-// 	free(value_array);
-// }
+	set_destroy(set2);
+	vector_destroy(values2);
+	free(value_array);
+}
 
 
 // void test_find_fsv(void) {
@@ -589,8 +600,8 @@ TEST_LIST = {
 	{ "set_iterate",	test_iterate 	},
 	{ "set_node_value",	test_node_value },
 	{ "test_set_create_from_sorted_values", 	test_set_create_from_sorted_values 	},
-	// { "set_insert_fsv", 	test_insert_fsv 	},
-	// { "set_remove_fsv", 	test_remove_fsv 	},
+	{ "set_insert_fsv", 	test_insert_fsv 	},
+	{ "set_remove_fsv", 	test_remove_fsv 	},
 	// { "set_find_fsv", 		test_find_fsv 		},
 	// { "set_iterate_fsv",	test_iterate_fsv 	},
 	// { "set_node_value_fsv",	test_node_value_fsv },

@@ -136,7 +136,12 @@ dir .../programs/queue_benchmark είναι:
 α) ./vector_benchmark real
 β) ./vector_benchmark amortized
 
-- vector_benchmark:
+- vector_benchmark real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1).
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160812.png)
+![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-19%20143330.png)
+
+- vector_benchmark amortized:
+είναι λογικό καθώς έχει πολυπλοκότητα O(1).
+
+![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-19%20142915.png

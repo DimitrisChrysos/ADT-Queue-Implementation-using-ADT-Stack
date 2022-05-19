@@ -131,6 +131,12 @@ f) ./queue_benchmark_using_list amortized
 α) vector_insert_last
 β) vector_remove_last
 
-Το νέο αρχείο λέγεται vector_benchmark.c, και τα commands για να το τρέξουμε είναι:
+Το νέο αρχείο λέγεται vector_benchmark.c, και τα commands για να το τρέξουμε στο
+dir .../programs/queue_benchmark είναι:
 α) ./vector_benchmark real
 β) ./vector_benchmark amortized
+
+- vector_benchmark:
+είναι λογικό καθώς έχει πολυπλοκότητα O(1).
+
+![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160812.png)

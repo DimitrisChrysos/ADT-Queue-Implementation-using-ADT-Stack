@@ -432,168 +432,164 @@ void test_remove_fsv(void) {
 }
 
 
-// void test_find_fsv(void) {
-// 	Vector values = vector_create(0, NULL);
-// 	for (int i = 0 ; i < 1000 ; i++)  {
-// 		Pointer temp_value = create_int(i+1);
-// 		vector_insert_last(values, temp_value);
-// 	}
+void test_find_fsv(void) {
+	Vector values = vector_create(0, NULL);
+	for (int i = 0 ; i < 1000 ; i++)  {
+		Pointer temp_value = create_int(i);
+		vector_insert_last(values, temp_value);
+	}
 
-// 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
+	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
 
-// 	int N = 1000;
+	int N = 1000;
 
-// 	int** value_array = malloc(N * sizeof(*value_array));
+	int** value_array = malloc(N * sizeof(*value_array));
 
-// 	for (int i = 0; i < N; i++)
-// 		value_array[i] = create_int(i);
+	for (int i = 0; i < N; i++)
+		value_array[i] = create_int(i);
 
-// 	// Παρόμοια με την set_remove, εάν το δέντρο δεν είναι σωστά ισορροπημένο, οι συναρτήσεις εύρεσης
-// 	// στοιχείων δεν θα ελέγχονται πλήρως
-// 	shuffle(value_array, N);
+	// Παρόμοια με την set_remove, εάν το δέντρο δεν είναι σωστά ισορροπημένο, οι συναρτήσεις εύρεσης
+	// στοιχείων δεν θα ελέγχονται πλήρως
+	shuffle(value_array, N);
 
-// 	for (int i = 0; i < N; i++) {
-// 		set_insert(set, value_array[i]);
+	for (int i = 0; i < N; i++) {
+		set_insert(set, value_array[i]);
 
-// 		SetNode found_node 	= set_find_node(set, value_array[i]);
-// 		Pointer found_value = set_node_value(set, found_node);
+		SetNode found_node 	= set_find_node(set, value_array[i]);
+		Pointer found_value = set_node_value(set, found_node);
 
-// 		TEST_ASSERT(found_node != SET_EOF);
-// 		TEST_ASSERT(found_value == value_array[i]);
-// 	}
+		TEST_ASSERT(found_node != SET_EOF);
+		TEST_ASSERT(found_value == value_array[i]);
+	}
 
-// 	// Αναζήτηση στοιχείου που δεν υπάρχει στο set
-// 	int not_exists = 2000;
-// 	TEST_ASSERT(set_find_node(set, &not_exists) == SET_EOF);
-// 	TEST_ASSERT(set_find(set, &not_exists) == NULL);
+	// Αναζήτηση στοιχείου που δεν υπάρχει στο set
+	int not_exists = 2000;
+	TEST_ASSERT(set_find_node(set, &not_exists) == SET_EOF);
+	TEST_ASSERT(set_find(set, &not_exists) == NULL);
 
-// 	// Αναζήτηση μέγιστων/ελάχιστων στοιχείων
-// 	// Συγκρίνουμε τις τιμές των δεικτών και όχι τους ίδιους τους δείκτες, καθώς
-// 	// δεν γνωρίζουμε την θέση τους μετά απο το ανακάτεμα του πίνακα, αλλά γνωρίζουμε
-// 	// ποιές τιμές υπάρχουν στο Set. Στη συγκεκριμένη περίπτωση, γνωρίζουμε ότι Set = {0, 1, ..., N-1}
-// 	SetNode first_node = set_first(set);
-// 	Pointer first_value = set_node_value(set, first_node);
-// 	TEST_ASSERT((*(int *)first_value) == 0);
+	// Αναζήτηση μέγιστων/ελάχιστων στοιχείων
+	// Συγκρίνουμε τις τιμές των δεικτών και όχι τους ίδιους τους δείκτες, καθώς
+	// δεν γνωρίζουμε την θέση τους μετά απο το ανακάτεμα του πίνακα, αλλά γνωρίζουμε
+	// ποιές τιμές υπάρχουν στο Set. Στη συγκεκριμένη περίπτωση, γνωρίζουμε ότι Set = {0, 1, ..., N-1}
+	SetNode first_node = set_first(set);
+	Pointer first_value = set_node_value(set, first_node);
+	TEST_ASSERT((*(int *)first_value) == 0);
 
-// 	SetNode next = set_next(set, first_node);
-// 	Pointer next_value = set_node_value(set, next);
-// 	TEST_ASSERT((*(int *)next_value) == 1);
+	SetNode next = set_next(set, first_node);
+	Pointer next_value = set_node_value(set, next);
+	TEST_ASSERT((*(int *)next_value) == 1);
 
-// 	SetNode last_node = set_last(set);
-// 	Pointer last_node_value = set_node_value(set, last_node);
-// 	TEST_ASSERT((*(int *)last_node_value) == N-1);
+	SetNode last_node = set_last(set);
+	Pointer last_node_value = set_node_value(set, last_node);
+	TEST_ASSERT((*(int *)last_node_value) == N-1);
 
-// 	SetNode prev = set_previous(set, last_node);
-// 	Pointer prev_value = set_node_value(set, prev);
-// 	TEST_ASSERT((*(int *)prev_value) == N-2);
+	SetNode prev = set_previous(set, last_node);
+	Pointer prev_value = set_node_value(set, prev);
+	TEST_ASSERT((*(int *)prev_value) == N-2);
 
-// 	// Ελέγχουμε και ότι βρίσκουμε σωστά τις τιμές από ενδιάμεσους κόμβους
-// 	SetNode middle_node = set_find_node(set, value_array[N/2]);
-// 	SetNode middle_node_prev = set_previous(set, middle_node);
+	// Ελέγχουμε και ότι βρίσκουμε σωστά τις τιμές από ενδιάμεσους κόμβους
+	SetNode middle_node = set_find_node(set, value_array[N/2]);
+	SetNode middle_node_prev = set_previous(set, middle_node);
 
-// 	Pointer middle_node_value = set_node_value(set, middle_node);
-// 	Pointer middle_node_value_prev = set_node_value(set, middle_node_prev);
+	Pointer middle_node_value = set_node_value(set, middle_node);
+	Pointer middle_node_value_prev = set_node_value(set, middle_node_prev);
 	
-// 	TEST_ASSERT(*(int *)middle_node_value == *(int *)middle_node_value_prev + 1);
+	TEST_ASSERT(*(int *)middle_node_value == *(int *)middle_node_value_prev + 1);
 
 
-// 	set_destroy(set);
-// 	free(value_array);
-// }
+	set_destroy(set);
+	free(value_array);
+}
 
-// void test_iterate_fsv(void) {
-// 	Vector values = vector_create(0, NULL);
-// 	for (int i = 0 ; i < 1000 ; i++)  {
-// 		Pointer temp_value = create_int(i+1);
-// 		vector_insert_last(values, temp_value);
-// 	}
+void test_iterate_fsv(void) {
+	Vector values = vector_create(0, NULL);
+	for (int i = 0 ; i < 1000 ; i++)  {
+		Pointer temp_value = create_int(i);
+		vector_insert_last(values, temp_value);
+	}
 
-// 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
+	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
 
-// 	int N = 1000;
-// 	int** value_array = malloc(N * sizeof(*value_array));
+	int N = 1000;
+	int** value_array = malloc(N * sizeof(*value_array));
 
-// 	for (int i = 0; i < N; i++)
-// 		value_array[i] = create_int(i);
+	for (int i = 0; i < N; i++)
+		value_array[i] = create_int(i);
 
-// 	// εισαγωγή τιμών σε τυχαία σειρά
-// 	shuffle(value_array, N);
+	// εισαγωγή τιμών σε τυχαία σειρά
+	shuffle(value_array, N);
 
-// 	for (int i = 0; i < N; i++)
-// 		set_insert(set, value_array[i]);
+	for (int i = 0; i < N; i++)
+		set_insert(set, value_array[i]);
 
-// 	// iterate, τα στοιχεία πρέπει να τα βρούμε στη σειρά διάταξης
-// 	int i = 0;
-// 	for (SetNode node = set_first(set); node != SET_EOF; node = set_next(set, node)) {
-// 		TEST_ASSERT(*(int*)set_node_value(set, node) == i++);
-// 	}
+	// iterate, τα στοιχεία πρέπει να τα βρούμε στη σειρά διάταξης
+	int i = 0;
+	for (SetNode node = set_first(set); node != SET_EOF; node = set_next(set, node)) {
+		TEST_ASSERT(*(int*)set_node_value(set, node) == i++);
+	}
 
-// 	// Κάποια removes
-// 	i = N - 1;
-// 	set_remove(set, &i);
-// 	i = 40;
-// 	set_remove(set, &i);
+	// Κάποια removes
+	i = N - 1;
+	set_remove(set, &i);
+	i = 40;
+	set_remove(set, &i);
 
-// 	// iterate, αντίστροφη σειρά, τα στοιχεία πρέπει να τα βρούμε στη σειρά διάταξης
-// 	i = N - 2;
-// 	for (SetNode node = set_last(set); node != SET_EOF; node = set_previous(set, node)) {
-// 		if(i == 40)
-// 			i--;					// το 40 το έχουμε αφαιρέσει
+	// iterate, αντίστροφη σειρά, τα στοιχεία πρέπει να τα βρούμε στη σειρά διάταξης
+	i = N - 2;
+	for (SetNode node = set_last(set); node != SET_EOF; node = set_previous(set, node)) {
+		if(i == 40)
+			i--;					// το 40 το έχουμε αφαιρέσει
 
-// 		TEST_ASSERT(*(int*)set_node_value(set, node) == i--);
-// 	}
+		TEST_ASSERT(*(int*)set_node_value(set, node) == i--);
+	}
 
-// 	set_destroy(set);
-// 	free(value_array);
-// }
+	set_destroy(set);
+	free(value_array);
+}
 
-// void test_node_value_fsv(void) {
-// 	// Η συνάρτηση αυτή ελέγχει ότι ένας κόμβος περιέχει πάντα την αρχική του τιμή,
-// 	// χωρίς να επηρρεάζεται από άλλους κόμβους που προστίθενται ή διαγράφονται.
+void test_node_value_fsv(void) {
+	// Η συνάρτηση αυτή ελέγχει ότι ένας κόμβος περιέχει πάντα την αρχική του τιμή,
+	// χωρίς να επηρρεάζεται από άλλους κόμβους που προστίθενται ή διαγράφονται.
 
-// 	Vector values = vector_create(0, NULL);
-// 	for (int i = 0 ; i < 1000 ; i++)  {
-// 		Pointer temp_value = create_int(i+1);
-// 		vector_insert_last(values, temp_value);
-// 	}
+	// the vector needs to be empty for the following tests
+	Vector values = vector_create(0, NULL);
 
-// 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
+	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
 
-// 	int N = 1000;
-// 	int** value_array = malloc(N * sizeof(*value_array));
+	int N = 1000;
+	int** value_array = malloc(N * sizeof(*value_array));
 
-// 	for (int i = 0; i < N; i++)
-// 		value_array[i] = create_int(i);
+	for (int i = 0; i < N; i++)
+		value_array[i] = create_int(i + 1000);
 
-// 	shuffle(value_array, N);
+	shuffle(value_array, N);
 
-// 	// Εισάγουμε έναν αριθμό και αποθηκεύουμε το node
-// 	set_insert(set, value_array[0]);
-// 	SetNode node = set_first(set);
-// 	TEST_ASSERT(set_node_value(set, node) == value_array[0]);
+	// Εισάγουμε έναν αριθμό και αποθηκεύουμε το node
+	set_insert(set, value_array[0]);
+	SetNode node = set_first(set);
+	TEST_ASSERT(set_node_value(set, node) == value_array[0]);
 
-// 	// Προσθήκη τιμών, και έλεγχος μετά από κάθε προσθήκη
-// 	for (int i = 1; i < N; i++) {
-// 		set_insert(set, value_array[i]);
+	// Προσθήκη τιμών, και έλεγχος μετά από κάθε προσθήκη
+	for (int i = 1; i < N; i++) {
+		set_insert(set, value_array[i]);
 
-// 		TEST_ASSERT(set_node_value(set, node) == value_array[0]);
-// 	}
+		TEST_ASSERT(set_node_value(set, node) == value_array[0]);
+	}
 
-// 	// Διαγραφή τιμών, και έλεγχος μετά από κάθε διαγραφή
-// 	for (int i = 1; i < N; i++) {
-// 		set_remove(set, value_array[i]);
+	// Διαγραφή τιμών, και έλεγχος μετά από κάθε διαγραφή
+	for (int i = 1; i < N; i++) {
+		set_remove(set, value_array[i]);
 
-// 		TEST_ASSERT(set_node_value(set, node) == value_array[0]);
-// 	}
+		TEST_ASSERT(set_node_value(set, node) == value_array[0]);
+	}
 
-// 	set_destroy(set);
-// 	free(value_array);
-// }
+	set_destroy(set);
+	free(value_array);
+}
 
 // Λίστα με όλα τα tests προς εκτέλεση
 TEST_LIST = {
 	{ "set_create", 	test_create 	},
-	{ "test_set_create_from_sorted_values", 	test_set_create_from_sorted_values 	},
 	{ "set_insert", 	test_insert 	},
 	{ "set_remove", 	test_remove 	},
 	{ "set_find", 		test_find 		},
@@ -602,8 +598,8 @@ TEST_LIST = {
 	{ "test_set_create_from_sorted_values", 	test_set_create_from_sorted_values 	},
 	{ "set_insert_fsv", 	test_insert_fsv 	},
 	{ "set_remove_fsv", 	test_remove_fsv 	},
-	// { "set_find_fsv", 		test_find_fsv 		},
-	// { "set_iterate_fsv",	test_iterate_fsv 	},
-	// { "set_node_value_fsv",	test_node_value_fsv },
+	{ "set_find_fsv", 		test_find_fsv 		},
+	{ "set_iterate_fsv",	test_iterate_fsv 	},
+	{ "set_node_value_fsv",	test_node_value_fsv },
 	{ NULL, NULL } // τερματίζουμε τη λίστα με NULL
 };

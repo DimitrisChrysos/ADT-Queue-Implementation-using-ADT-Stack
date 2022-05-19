@@ -317,6 +317,9 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 
 Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value, Vector values) {
 	Set set = set_create(compare, destroy_value);
+	if (vector_size(values) == 0)  {
+		return set;
+	}
 
 	VectorNode start = vector_first(values);
 	VectorNode end = vector_last(values);

@@ -498,6 +498,7 @@ void test_find_fsv(void) {
 
 
 	set_destroy(set);
+	vector_destroy(values);
 	free(value_array);
 }
 
@@ -544,6 +545,7 @@ void test_iterate_fsv(void) {
 	}
 
 	set_destroy(set);
+	vector_destroy(values);
 	free(value_array);
 }
 
@@ -584,6 +586,7 @@ void test_node_value_fsv(void) {
 	}
 
 	set_destroy(set);
+	vector_destroy(values);
 	free(value_array);
 }
 

@@ -10,5 +10,8 @@ queue_benchmark_using_stack_alt_OBJS = queue_benchmark.o $(MODULES)/UsingADTStac
 
 queue_benchmark_using_list_OBJS = queue_benchmark.o $(MODULES)/UsingADTList/ADTQueue.o $(MODULES)/UsingADTList/ADTStack.o $(MODULES)/UsingLinkedList/ADTList.o $(MODULES)/UsingDynamicArray/ADTVector.o
 
+# bonus
+vector_benchmark_OBJS = vector_benchmark.o $(MODULES)/UsingADTList/ADTQueue.o $(MODULES)/UsingADTList/ADTStack.o $(MODULES)/UsingLinkedList/ADTList.o $(MODULES)/UsingDynamicArray/ADTVector.o
+
 # Ο βασικός κορμός του Makefile
 include ../../common.mk

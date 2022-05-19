@@ -29,6 +29,7 @@ Queue queue_create(DestroyFunc destroy_value) {
 	Queue queue = malloc(sizeof(*queue));
 	queue->stack_insert = stack_create(destroy_value);
 	queue->stack_remove = stack_create(destroy_value);
+	queue->steps = 1;
 	return queue;
 }
 

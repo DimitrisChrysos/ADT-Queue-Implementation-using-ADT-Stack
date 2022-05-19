@@ -22,6 +22,8 @@
 typedef struct vector* Vector;
 
 
+int vector_steps(Vector vec);
+
 // Δημιουργεί και επιστρέφει ένα νεό vector μεγέθους size, με στοιχεία αρχικοποιημένα σε NULL.
 // Αν destroy_value != NULL, τότε καλείται destroy_value(value) κάθε φορά που αφαιρείται (ή αντικαθίσταται) ένα στοιχείο.
 

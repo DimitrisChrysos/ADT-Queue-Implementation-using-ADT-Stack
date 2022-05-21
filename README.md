@@ -102,7 +102,7 @@ f) ./queue_benchmark_using_list amortized
 - queue_benchmark_using_stack amortized:
 είναι λογικό καθώς έχει πολυπλοκότητα O(n) και O(1) και διαίρούνται τα steps με n, που το n συνέχεια αυξάνεται κάτα ένα.
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20155153.png)
+temp_node
 
 - queue_benchmark_using_stack_alt real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(n) όταν αδειάζει η remove και άλλες O(1) όταν δεν είναι άδεια
@@ -132,7 +132,7 @@ f) ./queue_benchmark_using_list amortized
 β) vector_remove_last
 
 Το νέο αρχείο λέγεται vector_benchmark.c, και τα commands για να το τρέξουμε στο
-dir .../programs/queue_benchmark είναι:
+dir .../programs/vector_benchmark είναι:
 α) ./vector_benchmark real
 β) ./vector_benchmark amortized
 

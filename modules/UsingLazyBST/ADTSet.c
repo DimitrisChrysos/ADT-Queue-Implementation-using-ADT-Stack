@@ -25,6 +25,7 @@ struct set_node {
 	SetNode left, right;		// Παιδιά
 	Pointer value;				// Τιμή κόμβου
 	int height;					// Ύψος που βρίσκεται ο κόμβος στο δέντρο
+	int size;					// Μέγεθος που έχει ο κόμβος
 };
 
 // Επιστρέφει τη max τιμή μεταξύ 2 ακεραίων
@@ -40,10 +41,23 @@ static int node_height(SetNode node) {
 	return node->height;
 }
 
+// Επιστρέφει το μέγεθος που έχει ο κόμβος που βρίσκεται ο κόμβος στο δέντρο
+
+static int node_size(SetNode node) {
+	if (!node) return 0;
+	return node->size;
+}
+
 // Ενημερώνει το ύψος ενός κόμβου
 
 static void node_update_height(SetNode node) {
 	node->height = 1 + int_max(node_height(node->left), node_height(node->right));
+}
+
+// Ενημερώνει το μέγεθος ενός κόμβου
+
+static void node_update_size(SetNode node) {
+	node->size = 1 + node_size(node->left) + node_size(node->right);
 }
 
 // Παρατηρήσεις για τις node_* συναρτήσεις
@@ -63,6 +77,8 @@ static SetNode node_create(Pointer value) {
 	node->right = NULL;
 	node->value = value;
 	node->height = 0;
+	node->size = 1;
+	
 	return node;
 }
 
@@ -147,52 +163,48 @@ static SetNode node_find_next(SetNode node, CompareFunc compare, SetNode target)
 	}
 }
 
-int size(SetNode node) {
-	if (node == NULL)  {
-		return 0;
-	}
-	else  {
-		int tree_size = size(node->left) + size(node->right) + 1;
-		return tree_size;
-	}
-	
-}
-
-bool check_balanced(Set set, SetNode node, SetNode moving_node)  {
-
-	int compare_value = set->compare(set_node_value(set, moving_node), set_node_value(set, node));
-	if (compare_value > 0)  {
-		moving_node = moving_node->left;
-		bool x = check_balanced(set, node, moving_node);
-		if (x == false)
-			return false;
-	}
-	else if (compare_value < 0)  {
-		moving_node = moving_node->right;
-		bool y = check_balanced(set, node, moving_node);
-		if (y == false)
-			return false;
-	}
-	// else if (compare_value == 0)  {
-	// 	return;
-	// }
-
-	if (moving_node->height >= 4)  {
-		int node_size = size(moving_node);
-		int node_left_size = size(moving_node->left);
-		int node_right_size = size(moving_node->right);
-		if (node_right_size <= (2 / 3) * node_size)
+bool check_balanced(Set set, SetNode node)  {
+	if (node->height >= 4)  {
+		if (node->right->size <= (2 / 3) * node->size)
 			return true;
 		else 
 			return false;
-		if (node_left_size <= (2 / 3) * node_size)
+		if (node->left->size <= (2 / 3) * node->size)
 			return true;
 		else 
 			return false;
 	}
-	else 
+	else
 		return true;
 }
+
+bool check_upper_balance(Set set, SetNode node, SetNode moving_node)  {
+	bool root_balance = check_balanced(set, moving_node);
+	if (root_balance == true)  {
+		int compare_value = set->compare(set_node_value(set, moving_node), set_node_value(set, node));
+		if (compare_value > 0)  {
+			moving_node = moving_node->left;
+			bool x = check_upper_balance(set, node, moving_node);
+			if (x == false)
+				return false;
+			else
+				return true;
+		}
+		else if (compare_value < 0)  {
+			moving_node = moving_node->right;
+			bool y = check_upper_balance(set, node, moving_node);
+			if (y == false)
+				return false;
+			else
+				return true;
+		}
+		else
+			return true;
+	}
+	else return false;
+}
+
+
 
 // Αν υπάρχει κόμβος με τιμή ισοδύναμη της value, αλλάζει την τιμή του σε value, διαφορετικά προσθέτει
 // νέο κόμβο με τιμή value. Επιστρέφει τη νέα ρίζα του υποδέντρου, και θέτει το *inserted σε true
@@ -202,6 +214,7 @@ static SetNode node_insert(SetNode node, CompareFunc compare, Pointer value, boo
 	// Αν το υποδέντρο είναι κενό, δημιουργούμε νέο κόμβο ο οποίος γίνεται ρίζα του υποδέντρου
 	if (node == NULL) {
 		*inserted = true;			// κάναμε προσθήκη
+		// node_update_size(node);
 		return node_create(value);
 	}
 	
@@ -225,6 +238,7 @@ static SetNode node_insert(SetNode node, CompareFunc compare, Pointer value, boo
 	}
 
 	node_update_height(node);
+	node_update_size(node);
 	return node;	// η ρίζα του υποδέντρου δεν αλλάζει
 }
 
@@ -242,6 +256,7 @@ static SetNode node_remove_min(SetNode node, SetNode* min_node) {
 		// και ενημερώνουμε το node->left με τη νέα ρίζα του υποδέντρου.
 		node->left = node_remove_min(node->left, min_node);
 		node_update_height(node);
+		node_update_size(node);
 		return node;			// η ρίζα δεν μεταβάλλεται
 	}
 }
@@ -296,6 +311,7 @@ static SetNode node_remove(SetNode node, CompareFunc compare, Pointer value, boo
 		node->right = node_remove(node->right, compare, value, removed, old_value);
 
 	node_update_height(node);
+	node_update_size(node);
 	return node;
 }
 
@@ -369,7 +385,6 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 	set->size += 1;
 
 
-	printf("\n~ height is: %d\n", root->height);
 	VectorNode new_end = vector_previous(values, middle_node);
 	VectorNode new_start = vector_next(values, middle_node);
 	if (set->size < vector_size(values))  {
@@ -386,6 +401,7 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, VectorNo
 		else return root;
 	}
 	node_update_height(root);
+	node_update_size(root);
 	return root;
 }
 
@@ -441,29 +457,30 @@ void set_insert(Set set, Pointer value) {
 
 	SetNode temp_node = set_find_node(set, value);
 	SetNode moving_node = set->root;
-	bool x = check_balanced(set, temp_node, moving_node);
+	bool x = check_upper_balance(set, temp_node, moving_node);
 	int after_size = set->size;
 	if (x == false && starting_size != after_size)  {
 		
 		Vector values = vector_create(0, free);
 
 		int activate = 1;
-		SetNode father_node = find_node_father(set, temp_node);
+		// SetNode father_node = find_node_father(set, temp_node);
 		while (activate == 1)  {
 			SetNode	min_node = node_find_min(temp_node);
 			Pointer min_value = set_node_value(set, min_node);
 			vector_insert_last(values, min_value);
 			if (min_node == temp_node)  {
 				activate = 0;
+				break;
 			}
 			node_destroy(min_node, set->destroy_value);
 		}
-		printf("father_value: %d ||| son value: %d", *(int*)set_node_value(set, father_node), *(int*)set_node_value(set, temp_node)); // να εκτυπώσω το φαδερ και σον βαλιου για να δω τι γίνεται, λογικά έχει θέμα η find_node_father
+		
 		// int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, temp_node));
 		Set temp_set = set_create_from_sorted_values(set->compare, free, values);
-		//node_destroy(temp_node, free);
+		// node_destroy(temp_node, free);
 
-		temp_node = temp_set->root;;
+		temp_node = temp_set->root;
 		// if (compare_value > 0)  {
 		// 	father_node->left = temp_set->root;
 		// }

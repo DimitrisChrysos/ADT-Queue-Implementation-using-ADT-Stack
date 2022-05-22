@@ -304,14 +304,14 @@ void test_node_value(void) {
 //	για την ονομασία των παρακάτω συναρτήσεων: from_sorted_values = fsv
 
 void test_set_create_from_sorted_values(void) {
-	Vector values = vector_create(0, NULL);
+	Vector values = vector_create(0, free);
 	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i+1);
 		vector_insert_last(values, temp_value);
 	}
 
 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
-	set_set_destroy_value(set, NULL);
+	// set_set_destroy_value(set, NULL);
 
 	TEST_ASSERT(set != NULL);
 	TEST_ASSERT(set_size(set) == 1000);
@@ -322,7 +322,7 @@ void test_set_create_from_sorted_values(void) {
 }
 
 void test_insert_fsv(void) {
-	Vector values = vector_create(0, NULL);
+	Vector values = vector_create(0, free);
 	for (int i = 0 ; i < 10 ; i++)  {
 		Pointer temp_value = create_int(i);
 		vector_insert_last(values, temp_value);
@@ -372,13 +372,13 @@ void test_insert_fsv(void) {
 
 
 void test_remove_fsv(void) {
-	Vector values = vector_create(0, NULL);
+	Vector values = vector_create(0, free);
 	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i+1);
 		vector_insert_last(values, temp_value);
 	}
 
-	Set set = set_create_from_sorted_values(compare_ints, free, values);
+	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
 
 	int N = 1000;
 
@@ -410,7 +410,7 @@ void test_remove_fsv(void) {
 	vector_destroy(values);
 
 	// Δοκιμάζουμε τη remove χωρίς αυτόματο free
-	Vector values2 = vector_create(0, NULL);
+	Vector values2 = vector_create(0, free);
 	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i+1);
 		vector_insert_last(values2, temp_value);
@@ -433,7 +433,7 @@ void test_remove_fsv(void) {
 
 
 void test_find_fsv(void) {
-	Vector values = vector_create(0, NULL);
+	Vector values = vector_create(0, free);
 	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i);
 		vector_insert_last(values, temp_value);
@@ -503,7 +503,7 @@ void test_find_fsv(void) {
 }
 
 void test_iterate_fsv(void) {
-	Vector values = vector_create(0, NULL);
+	Vector values = vector_create(0, free);
 	for (int i = 0 ; i < 1000 ; i++)  {
 		Pointer temp_value = create_int(i);
 		vector_insert_last(values, temp_value);
@@ -554,7 +554,7 @@ void test_node_value_fsv(void) {
 	// χωρίς να επηρρεάζεται από άλλους κόμβους που προστίθενται ή διαγράφονται.
 
 	// the vector needs to be empty for the following tests
-	Vector values = vector_create(0, NULL);
+	Vector values = vector_create(0, free);
 
 	Set set = set_create_from_sorted_values(compare_ints, NULL, values);
 

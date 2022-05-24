@@ -304,7 +304,7 @@ static void node_destroy(SetNode node, DestroyFunc destroy_value) {
 SetNode find_node_father(Set set, SetNode node)  {
 	SetNode moving_node = set->root;
 	int activate = 1;
-	SetNode parent_node;
+	SetNode parent_node = NULL;
 	while (activate == 1)  {
 		int compare_value = set->compare(set_node_value(set, moving_node), set_node_value(set, node));
 		if (compare_value > 0)  {
@@ -338,8 +338,14 @@ bool check_balanced(SetNode node)  {
 		return true;
 }
 
+static int* create_int(int value) {
+	int* p = malloc(sizeof(int));
+	*p = value;
+	return p;
+}
+
 void balance_tree(Set set, SetNode node)  {
-	Vector values = vector_create(0, free);
+	Vector values = vector_create(0, NULL);
 
 		int activate = 1;
 		int one_time = 1;
@@ -352,6 +358,7 @@ void balance_tree(Set set, SetNode node)  {
 			if (node->left == NULL && one_time == 1 && node == set->root)  {
 				min_node = node_find_min(node->right);
 				vector_insert_last(values, node->value);
+				printf("min value: %d\n", *(int*)node->value);
 				one_time = 0;
 			}
 			else if (node->left == NULL && node == set->root)  {
@@ -361,27 +368,38 @@ void balance_tree(Set set, SetNode node)  {
 				min_node = node_find_min(node);
 			}
 			printf("min value: %d\n", *(int*)min_node->value);
-			vector_insert_last(values, min_node->value);
+			Pointer insert_value = create_int(*(int*)min_node->value);
+			vector_insert_last(values, insert_value);
 			set_remove(set, min_node->value);
 		}
 		
-		printf("~~~\n\n\n~~~\n");
-		for(VectorNode node = vector_first(values) ; node != VECTOR_EOF ; node = vector_next(values, node))  {
-			Pointer temp_value = vector_node_value(values, node);
-			printf("value is: %d\n", *(int*)temp_value);
-		}
+		// printf("~~~\n\n\n~~~\n");
+		// for(VectorNode node1 = vector_first(values) ; node1 != VECTOR_EOF ; node1 = vector_next(values, node1))  {
+		// 	Pointer temp_value = vector_node_value(values, node1);
+		// 	printf("value is: %d\n", *(int*)temp_value);
+		// }
 
-		// int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, node));
+		
 		Set temp_set = set_create_from_sorted_values(set->compare, free, values);
 		// node_destroy(node, free);
 
-		node = temp_set->root;
-		// if (compare_value > 0)  {
-		// 	father_node->left = temp_set->root;
+		// for(SetNode node2 = set_first(temp_set) ; node2 != SET_EOF ; node2 = set_next(temp_set, node2))  {
+		// 	Pointer temp_value = set_node_value(temp_set, node2);
+		// 	printf("set value is: %d\n", *(int*)temp_value);
 		// }
-		// else if (compare_value < 0)  {
-		// 	father_node->right = temp_set->root;
-		// }
+
+		SetNode father_node = find_node_father(set, node);
+		int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, node));
+
+		if (compare_value == 0)  {
+			set = temp_set;
+		}
+		else if (compare_value > 0)  {
+			father_node->left = temp_set->root;
+		}
+		else if (compare_value < 0)  {
+			father_node->right = temp_set->root;
+		}
 
 		// vector_destroy(values);
 }

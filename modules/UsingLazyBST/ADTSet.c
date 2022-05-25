@@ -453,11 +453,12 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 
 	// to find where start and end is
 
-	for (VectorNode node = vector_first(values) ; vector_node_value(values, node) != start_next ; node = vector_next(values, node))  {
+	for (VectorNode node = vector_first(values) ; node != VECTOR_EOF ; node = vector_next(values, node))  {
 		SetNode node_set = vector_node_value(values, node);
 		SetNode start_set = start;
 		if (node_set->value == start_set->value)  {
 			pos_start = i;
+			break;
 		}
 		i++;
 	}
@@ -488,11 +489,6 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	printf("~ node_for_root->value = %d\n", *(int*)node_for_root->value);
 
 	set->size += 1;
-
-	// for(VectorNode node1 = vector_first(values) ; node1 != VECTOR_EOF ; node1 = vector_next(values, node1))  {
-	// 	SetNode temp_value = vector_node_value(values, node1);
-	// 	printf("value is: %d\n", *(int*)temp_value->value);
-	// }
 
 	Pointer new_end;
 	Pointer new_end_next;
@@ -537,12 +533,18 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 		}
 		else if (vector_size(values) == 2)  {
 			root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, new_start_next, end_next);
+			node_update_height(root);
+			node_update_size(root);
 			return root;
 		}
 		if (new_start != NULL)  {
 			root->right = init_set_from_vector_with_balanced_tree(set, values, new_start, end, new_start_next, end_next);
 		}
-		else return root;
+		else  {
+			node_update_height(root);
+			node_update_size(root);
+			return root;
+		}
 	}
 	node_update_height(root);
 	node_update_size(root);
@@ -554,13 +556,6 @@ Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value
 	if (vector_size(values) == 0)  {
 		return set;
 	}
-
-
-	// printf("~~~\n\n\n~~~\n");
-	// for(VectorNode node1 = vector_first(values) ; node1 != VECTOR_EOF ; node1 = vector_next(values, node1))  {
-	// 	Pointer temp_value = vector_node_value(values, node1);
-	// 	printf("value is: %d\n", *(int*)temp_value);
-	// }
 
 	Pointer start = vector_node_value(values, vector_first(values));
 	Pointer start_next = vector_node_value(values, vector_next(values, vector_first(values)));

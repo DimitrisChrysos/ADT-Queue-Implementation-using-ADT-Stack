@@ -341,66 +341,72 @@ bool check_balanced(SetNode node)  {
 void balance_tree(Set set, SetNode node)  {
 	Vector values = vector_create(0, NULL);
 
-		int activate = 1;
-		int one_time = 1;
-		while (activate == 1)  {
-			if (node->size == 1)  {
-				activate = 0;
-				break;
-			}
-			SetNode	min_node;
-			if (node->left == NULL && one_time == 1 && node == set->root)  {
-				min_node = node_find_min(node->right);
-				Pointer node_to_pointer = node;
-				vector_insert_last(values, node_to_pointer);
-				printf("min value: %d\n", *(int*)node->value);
-				one_time = 0;
-			}
-			else if (node->left == NULL && node == set->root)  {
-				node->right = node_remove_min(node->right, &min_node);
-				node->height--;
-				node->size--;
-				printf("min value: %d\n", *(int*)min_node->value);
-				Pointer node_to_pointer = min_node;
-				vector_insert_last(values, node_to_pointer);
-			}
-			else  {
-				node = node_remove_min(node, &min_node);
-				printf("min value: %d\n", *(int*)min_node->value);
-				Pointer node_to_pointer = min_node;
-				vector_insert_last(values, node_to_pointer);
-			}
+	int activate = 1;
+	int one_time = 1;
+	while (activate == 1)  {
+		if (node->size == 1)  {
+			activate = 0;
+			break;
 		}
-		
-		printf("~~~\n\n\n~~~\n");
-		for(VectorNode node1 = vector_first(values) ; node1 != VECTOR_EOF ; node1 = vector_next(values, node1))  {
-			Pointer temp_value = vector_node_value(values, node1);
-			printf("value is: %d\n", *(int*)temp_value);
+		SetNode	min_node;
+		if (node->left == NULL && one_time == 1 && node == set->root)  {
+			min_node = node_find_min(node->right);
+			Pointer node_to_pointer = node;
+			vector_insert_last(values, node_to_pointer);
+			// printf("min value: %d\n", *(int*)node->value);
+			one_time = 0;
 		}
+		else if (node->left == NULL && node == set->root)  {
+			node->right = node_remove_min(node->right, &min_node);
+			node->height--;
+			node->size--;
+			// printf("min value: %d\n", *(int*)min_node->value);
+			Pointer node_to_pointer = min_node;
+			vector_insert_last(values, node_to_pointer);
+		}
+		else  {
+			node = node_remove_min(node, &min_node);
+			// printf("min value: %d\n", *(int*)min_node->value);
+			Pointer node_to_pointer = min_node;
+			vector_insert_last(values, node_to_pointer);
+		}
+	}
+	
+	// printf("~~~\n\n\n~~~\n");
+	// for(VectorNode node1 = vector_first(values) ; node1 != VECTOR_EOF ; node1 = vector_next(values, node1))  {
+	// 	Pointer temp_value = vector_node_value(values, node1);
+	// 	printf("value is: %d\n", *(int*)temp_value);
+	// }
 
-		
-		Set temp_set = set_create_from_sorted_values(set->compare, free, values);
+	
+	Set temp_set = set_create_from_sorted_values(set->compare, NULL, values);
+
+	if (set->root == node)  {
 		// node_destroy(node, free);
+		set = temp_set;
+	}
+	
+	// node_destroy(node, free);
 
-		for(SetNode node2 = set_first(temp_set) ; node2 != SET_EOF ; node2 = set_next(temp_set, node2))  {
-			Pointer temp_value = set_node_value(temp_set, node2);
-			printf("set value is: %d\n", *(int*)temp_value);
-		}
+	for(SetNode node2 = set_first(temp_set) ; node2 != SET_EOF ; node2 = set_next(temp_set, node2))  {
+		Pointer temp_value = set_node_value(temp_set, node2);
+		printf("set value is: %d\n", *(int*)temp_value);
+	}
 
-		SetNode father_node = find_node_father(set, node);
-		int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, node));
+	SetNode father_node = find_node_father(set, node);
+	int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, node));
 
-		if (compare_value == 0)  {
-			set = temp_set;
-		}
-		else if (compare_value > 0)  {
-			father_node->left = temp_set->root;
-		}
-		else if (compare_value < 0)  {
-			father_node->right = temp_set->root;
-		}
+	if (compare_value == 0)  {
+		set->root = temp_set->root;
+	}
+	else if (compare_value > 0)  {
+		father_node->left = temp_set->root;
+	}
+	else if (compare_value < 0)  {
+		father_node->right = temp_set->root;
+	}
 
-		// vector_destroy(values);
+	// vector_destroy(values);
 }
 
 bool check_upper_balance(Set set, SetNode target_node, SetNode moving_node)  {
@@ -519,12 +525,14 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	
 	SetNode node_for_new_end = new_end;
 	if (new_end != NULL)  {
-		printf("~ node_for_new_end->value = %d\n", *(int*)node_for_new_end->value);
+		if (node_for_new_end == NULL)  {}
+		// printf("~ node_for_new_end->value = %d\n", *(int*)node_for_new_end->value);
 	}
 
 	SetNode node_for_new_start = new_start;
 	if (new_start != NULL)  {
-		printf("~ node_for_new_start->value = %d\n", *(int*)node_for_new_start->value);
+		if (node_for_new_start == NULL)  {}
+		// printf("~ node_for_new_start->value = %d\n", *(int*)node_for_new_start->value);
 	}
 
 	if (set->size < vector_size(values))  {
@@ -552,7 +560,7 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 }
 
 Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value, Vector values) {
-	Set set = set_create(compare, destroy_value);
+	Set set = set_create(compare, NULL);
 	if (vector_size(values) == 0)  {
 		return set;
 	}
@@ -649,7 +657,7 @@ SetNode set_find_node(Set set, Pointer value) {
 
 // LCOV_EXCL_START (δε μας ενδιαφέρει το coverage των test εντολών, και επιπλέον μόνο τα true branches εκτελούνται σε ένα επιτυχημένο test)
 
-static bool node_is_lbst(SetNode node, CompareFunc compare) {
+static bool node_is_bst(SetNode node, CompareFunc compare) {
 	if (node == NULL)
 		return true;
 
@@ -662,20 +670,13 @@ static bool node_is_lbst(SetNode node, CompareFunc compare) {
 	if(node->right != NULL)
 		res = res && compare(node->right->value, node->value) > 0 && compare(node_find_min(node->right)->value, node->value) > 0;
 
-	// Το ύψος είναι σωστό
-	res = res && node->height == 1 + int_max(node_height(node->left), node_height(node->right));
-
-
-	// Τα υποδέντρα είναι σωστά
-	res = res &&
-		node_is_lbst(node->left, compare) &&
-		node_is_lbst(node->right, compare);
-
-	return res;
+	return res &&
+		node_is_bst(node->left, compare) &&
+		node_is_bst(node->right, compare);
 }
 
 bool set_is_proper(Set node) {
-	return node_is_lbst(node->root, node->compare);
+	return node_is_bst(node->root, node->compare);
 }
 
 // LCOV_EXCL_STOP

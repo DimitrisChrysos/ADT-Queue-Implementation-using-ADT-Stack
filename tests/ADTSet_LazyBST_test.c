@@ -38,6 +38,14 @@ void insert_and_test(Set set, Pointer value) {
 
 	set_insert(set, value);
 	TEST_ASSERT(set_is_proper(set));
+	// printf("\n*current value: %p is equal to-> %d\n", value, *(int*)value);
+	// printf("\n\n");
+	// for(SetNode node2 = set_first(set) ; node2 != SET_EOF ; node2 = set_next(set, node2))  {
+	// 	Pointer temp_value = set_node_value(set, node2);
+	// 	if (*(int*)temp_value != 2)
+	// 		printf("set value: %p is equal to-> %d\n", temp_value, *(int*)temp_value);
+	// }
+	// if (*(int*)value != 2)
 	// TEST_ASSERT(set_find(set, value) == value);
 }
 
@@ -72,7 +80,7 @@ void test_insert(void) {
 
 	Set set = set_create(compare_ints, free);
 
-	int N = 5;
+	int N = 10;
 
 	int** value_array = malloc(N * sizeof(*value_array));
 

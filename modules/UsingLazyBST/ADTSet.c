@@ -325,11 +325,14 @@ SetNode find_node_father(Set set, SetNode node)  {
 
 bool check_balanced(SetNode node)  {
 	if (node->height >= 4)  {
-		if (node->right->size <= (2 / 3) * node->size)
-			return true;
-		else 
-			return false;
-		if (node->left->size <= (2 / 3) * node->size)
+		// if (node != NULL)
+		// 	printf("\nnode->size = %d", node->size);
+		// if (node->right != NULL)
+		// 	printf("\nnode->right->size = %d", node->right->size);
+		// if (node->left != NULL)
+		// 	printf("\nnode->left->size = %d", node->left->size);
+		if (3 * node->right->size <= 2 * node->size && 
+			3 * node->left->size <= 2 * node->size)
 			return true;
 		else 
 			return false;
@@ -347,40 +350,17 @@ void balance_tree(Set set, SetNode node)  {
 	Vector values = vector_create(0, NULL);
 
 	int activate = 1;
-	// int one_time = 1;
 
 	int starting_size = node->size;
 	while (activate == 1)  {
-		// if (node->size == 0)  {
-		// 	activate = 0;
-		// 	break;
-		// }
 		SetNode	min_node;
-		// if (node->left == NULL && one_time == 1 && node == set->root)  {
-		// 	min_node = node_find_min(node->right);
-		// 	Pointer node_to_pointer = node;
-		// 	vector_insert_last(values, node_to_pointer);
-		// 	// printf("min value: %d\n", *(int*)node->value);
-		// 	one_time = 0;
-		// }
-		// else if (node->left == NULL && node == set->root)  {
-		// 	node->right = node_remove_min(node->right, &min_node);
-		// 	node->height--;
-		// 	node->size--;
-		// 	// printf("min value: %d\n", *(int*)min_node->value);
-		// 	Pointer node_to_pointer = min_node;
-		// 	vector_insert_last(values, node_to_pointer);
-		// }
-		// else  {
 		node = node_remove_min(node, &min_node);
-		// printf("min value: %d\n", *(int*)min_node->value);
 		Pointer node_to_pointer = min_node;
 		vector_insert_last(values, node_to_pointer);
 		if (vector_size(values) == starting_size)  {
 			activate = 0;
 			break;
 		}
-		// }
 	}
 	
 	// printf("~~~\n\n\n~~~\n");
@@ -401,33 +381,16 @@ void balance_tree(Set set, SetNode node)  {
 	else if (compare_value < 0)  {
 		father_node->right = temp_set->root;
 	}
-
-	// if (set->root == node)  {
-	// 	// node_destroy(node, free);
-	// 	set = temp_set;
-	// }
 	
-	// // node_destroy(node, free);
+	
 
 	// for(SetNode node2 = set_first(temp_set) ; node2 != SET_EOF ; node2 = set_next(temp_set, node2))  {
 	// 	Pointer temp_value = set_node_value(temp_set, node2);
 	// 	printf("set value is: %d\n", *(int*)temp_value);
 	// }
 
-	// SetNode father_node = find_node_father(set, node);
-	// int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, node));
 
-	// if (compare_value == 0)  {
-	// 	set->root = temp_set->root;
-	// }
-	// else if (compare_value > 0)  {
-	// 	father_node->left = temp_set->root;
-	// }
-	// else if (compare_value < 0)  {
-	// 	father_node->right = temp_set->root;
-	// }
-
-	// vector_destroy(values);
+	vector_destroy(values);
 }
 
 bool check_upper_balance(Set set, SetNode target_node, SetNode moving_node)  {
@@ -590,6 +553,7 @@ Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value
 	Pointer start_next = vector_node_value(values, vector_next(values, vector_first(values)));
 	Pointer end = vector_node_value(values, vector_last(values));
 	Pointer end_next = VECTOR_EOF;
+	printf("\n\n~~\n\n");
 	set->root = init_set_from_vector_with_balanced_tree(set, values, start, end, start_next, end_next);
 	
 	return set;

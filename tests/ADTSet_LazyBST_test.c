@@ -46,7 +46,7 @@ void insert_and_test(Set set, Pointer value) {
 	// 		printf("set value: %p is equal to-> %d\n", temp_value, *(int*)temp_value);
 	// }
 	// if (*(int*)value != 2)
-	// TEST_ASSERT(set_find(set, value) == value);
+	TEST_ASSERT(set_find(set, value) == value);
 }
 
 // Βοηθητική συνάρτηση για το ανακάτεμα του πίνακα τιμών

@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include <stdio.h>
 
 #include "ADTSet.h"
 #include "ADTVector.h"
@@ -172,7 +171,6 @@ static SetNode node_insert(SetNode node, CompareFunc compare, Pointer value, boo
 	// Αν το υποδέντρο είναι κενό, δημιουργούμε νέο κόμβο ο οποίος γίνεται ρίζα του υποδέντρου
 	if (node == NULL) {
 		*inserted = true;			// κάναμε προσθήκη
-		// node_update_size(node);
 		return node_create(value);
 	}
 	
@@ -318,12 +316,6 @@ SetNode find_node_father(Set set, SetNode node)  {
 
 bool check_balanced(SetNode node)  {
 	if (node->height >= 4)  {
-		// if (node != NULL)
-		// 	printf("\nnode->size = %d", node->size);
-		// if (node->right != NULL)
-		// 	printf("\nnode->right->size = %d", node->right->size);
-		// if (node->left != NULL)
-		// 	printf("\nnode->left->size = %d", node->left->size);
 		if (node->right == NULL)  {
 			return false;
 		}
@@ -383,12 +375,6 @@ void balance_tree(Set set, SetNode node)  {
 			break;
 		}
 	}
-	
-	// printf("~~~\n\n\n~~~\n");
-	// for(VectorNode node1 = vector_first(values) ; node1 != VECTOR_EOF ; node1 = vector_next(values, node1))  {
-	// 	Pointer temp_value = vector_node_value(values, node1);
-	// 	printf("value is: %d\n", *(int*)temp_value);
-	// }
 
 	
 	Set temp_set = set_create_from_sorted_values(set->compare, NULL, values);
@@ -406,13 +392,6 @@ void balance_tree(Set set, SetNode node)  {
 	SetNode moving_node = set->root;
 	SetNode father_temp_set_root = find_node_father(set, temp_set->root);
 	path_update_height_and_size(set, moving_node, father_temp_set_root);
-	
-
-	// for(SetNode node2 = set_first(temp_set) ; node2 != SET_EOF ; node2 = set_next(temp_set, node2))  {
-	// 	Pointer temp_value = set_node_value(temp_set, node2);
-	// 	printf("set value is: %d\n", *(int*)temp_value);
-	// }
-
 
 	vector_destroy(values);
 }
@@ -500,7 +479,6 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	
 	SetNode node_for_root = vector_get_at(values, middle);
 	SetNode root = node_for_root;
-	// printf("~ node_for_root->value = %d\n", *(int*)node_for_root->value);
 
 	set->size += 1;
 
@@ -532,16 +510,9 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	}
 	
 	SetNode node_for_new_end = new_end;
-	if (new_end != NULL)  {
-		if (node_for_new_end == NULL)  {}
-		// printf("~ node_for_new_end->value = %d\n", *(int*)node_for_new_end->value);
-	}
-
+		if (node_for_new_end == NULL)  {}	// to not show errors
 	SetNode node_for_new_start = new_start;
-	if (new_start != NULL)  {
-		if (node_for_new_start == NULL)  {}
-		// printf("~ node_for_new_start->value = %d\n", *(int*)node_for_new_start->value);
-	}
+		if (node_for_new_start == NULL)  {}		// to not show errors	
 
 	if (set->size < vector_size(values))  {
 		if (new_end != NULL)  {
@@ -577,7 +548,6 @@ Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value
 	Pointer start_next = vector_node_value(values, vector_next(values, vector_first(values)));
 	Pointer end = vector_node_value(values, vector_last(values));
 	Pointer end_next = VECTOR_EOF;
-	// printf("\n\n~~\n\n");
 	set->root = init_set_from_vector_with_balanced_tree(set, values, start, end, start_next, end_next);
 	
 	return set;
@@ -698,6 +668,9 @@ static bool node_is_bst(SetNode node, CompareFunc compare) {
 
 	// Το ύψος είναι σωστό
 	res = res && node->height == 1 + int_max(node_height(node->left), node_height(node->right));
+
+	// Το size είναι σωστό
+	res = res && node->size == 1 + node_size(node->left) + node_size(node->right);
 
 	return res &&
 		node_is_bst(node->left, compare) &&

@@ -80,25 +80,15 @@ void test_insert(void) {
 	for (int i = 0; i < N; i++) {
 		
 		value_array[i] = create_int(i);
-		// printf("\n");
 		insert_and_test(set, value_array[i]);
-		// for (SetNode node = set_first(set) ; node != SET_EOF ; node = set_next(set, node))  {
-		// 		Pointer value = set_node_value(set, node);
-		// 		printf("value is : %d\n", *(int*)value);
-		// 	}
 		TEST_ASSERT(set_size(set) == (i + 1));
 
 	}
-	// for (SetNode node = set_first(set) ; node != SET_EOF ; node = set_next(set, node))  {
-	// 	Pointer value = set_node_value(set, node);
-	// 	printf("value is : %d\n", *(int*)value);
-	// }
 	// Δοκιμάζουμε την insert με τιμές που υπάρχουν ήδη στο Set
 	// και ελέγχουμε ότι δεν ενημερώθηκε το size (καθώς δεν προστέθηκε νέος κόμβος)
 	int* new_value = create_int(0);
 	insert_and_test(set, new_value);
 
-	// printf("set_size = %d , N = %d", set_size(set), N);
 	TEST_ASSERT(set_size(set) == N);
 
 	set_destroy(set);

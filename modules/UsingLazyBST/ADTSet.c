@@ -76,7 +76,7 @@ static SetNode node_create(Pointer value) {
 	node->left = NULL;
 	node->right = NULL;
 	node->value = value;
-	node->height = 0;
+	node->height = 1;
 	node->size = 1;
 	
 	return node;
@@ -238,20 +238,12 @@ static SetNode node_remove(SetNode node, CompareFunc compare, Pointer value, boo
 			// Δεν υπάρχει αριστερό υποδέντρο, οπότε διαγράφεται απλά ο κόμβος και νέα ρίζα μπαίνει το δεξί παιδί
 			SetNode right = node->right;	// αποθήκευση πριν το free!
 			free(node);
-			if (right != NULL)  {
-				node_update_height(right);
-				node_update_size(right);
-			}
 			return right;
 
 		} else if (node->right == NULL) {
 			// Δεν υπάρχει δεξί υποδέντρο, οπότε διαγράφεται απλά ο κόμβος και νέα ρίζα μπαίνει το αριστερό παιδί
 			SetNode left = node->left;		// αποθήκευση πριν το free!
 			free(node);
-			if (left != NULL)  {
-				node_update_height(left);
-				node_update_size(left);
-			}
 			return left;
 
 		} else {
@@ -306,11 +298,13 @@ SetNode find_node_father(Set set, SetNode node)  {
 	int activate = 1;
 	SetNode parent_node = NULL;
 	while (activate == 1)  {
-		int compare_value = set->compare(set_node_value(set, moving_node), set_node_value(set, node));
+		int compare_value = set->compare(moving_node->value, node->value);
 		if (compare_value > 0)  {
+			parent_node = moving_node;
 			moving_node = moving_node->left;
 		}
 		else if (compare_value < 0)  {
+			parent_node = moving_node;
 			moving_node = moving_node->right;
 		}
 		else if (compare_value == 0)  {
@@ -318,7 +312,6 @@ SetNode find_node_father(Set set, SetNode node)  {
 				parent_node = node;
 			return parent_node;
 		}
-		parent_node = moving_node;
 	}
 	return parent_node;
 }
@@ -331,6 +324,12 @@ bool check_balanced(SetNode node)  {
 		// 	printf("\nnode->right->size = %d", node->right->size);
 		// if (node->left != NULL)
 		// 	printf("\nnode->left->size = %d", node->left->size);
+		if (node->right == NULL)  {
+			return false;
+		}
+		else if (node->left == NULL)  {
+			return false;
+		}
 		if (3 * node->right->size <= 2 * node->size && 
 			3 * node->left->size <= 2 * node->size)
 			return true;
@@ -341,11 +340,33 @@ bool check_balanced(SetNode node)  {
 		return true;
 }
 
+void path_update_height_and_size(Set set, SetNode moving_node, SetNode target_node)  {
+	
+	
+	int compare_value = set->compare(moving_node->value, target_node->value);
+
+	if (compare_value == 0)  {
+		node_update_height(moving_node);
+		node_update_size(moving_node);
+		return;
+	}
+	else if (compare_value > 0)  {
+		if (moving_node->left != NULL)
+			path_update_height_and_size(set, moving_node->left, target_node);
+	}
+	else if (compare_value < 0)  {
+		if (moving_node->right != NULL)
+			path_update_height_and_size(set, moving_node->right, target_node);
+	}
+	node_update_height(moving_node);
+	node_update_size(moving_node);
+}
+
 void balance_tree(Set set, SetNode node)  {
 
 
 	SetNode father_node = find_node_father(set, node);
-	int compare_value = set->compare(set_node_value(set, father_node), set_node_value(set, node));
+	int compare_value = set->compare(father_node->value, node->value);
 
 	Vector values = vector_create(0, NULL);
 
@@ -382,6 +403,9 @@ void balance_tree(Set set, SetNode node)  {
 		father_node->right = temp_set->root;
 	}
 	
+	SetNode moving_node = set->root;
+	SetNode father_temp_set_root = find_node_father(set, temp_set->root);
+	path_update_height_and_size(set, moving_node, father_temp_set_root);
 	
 
 	// for(SetNode node2 = set_first(temp_set) ; node2 != SET_EOF ; node2 = set_next(temp_set, node2))  {
@@ -394,7 +418,7 @@ void balance_tree(Set set, SetNode node)  {
 }
 
 bool check_upper_balance(Set set, SetNode target_node, SetNode moving_node)  {
-	if (moving_node->height >= 4)  {
+	if (moving_node != NULL && moving_node->height >= 4)  {
 		bool root_balance = check_balanced(moving_node);
 		if (root_balance == true)  {
 			int compare_value = set->compare(set_node_value(set, moving_node), set_node_value(set, target_node));
@@ -476,7 +500,7 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	
 	SetNode node_for_root = vector_get_at(values, middle);
 	SetNode root = node_for_root;
-	printf("~ node_for_root->value = %d\n", *(int*)node_for_root->value);
+	// printf("~ node_for_root->value = %d\n", *(int*)node_for_root->value);
 
 	set->size += 1;
 
@@ -553,7 +577,7 @@ Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value
 	Pointer start_next = vector_node_value(values, vector_next(values, vector_first(values)));
 	Pointer end = vector_node_value(values, vector_last(values));
 	Pointer end_next = VECTOR_EOF;
-	printf("\n\n~~\n\n");
+	// printf("\n\n~~\n\n");
 	set->root = init_set_from_vector_with_balanced_tree(set, values, start, end, start_next, end_next);
 	
 	return set;
@@ -580,6 +604,16 @@ void set_insert(Set set, Pointer value) {
 }
 
 bool set_remove(Set set, Pointer value) {
+	SetNode value_node = set_find_node(set, value);
+	SetNode value_node_right_kid = NULL;
+	SetNode value_node_left_kid = NULL;
+	SetNode temp_node = NULL;
+	if (value_node != NULL)  {
+		value_node_right_kid = value_node->right;
+		value_node_left_kid = value_node->left;
+		temp_node = find_node_father(set, value_node);
+	}
+	
 	bool removed;
 	Pointer old_value = NULL;
 	set->root = node_remove(set->root, set->compare, value, &removed, &old_value);
@@ -592,6 +626,13 @@ bool set_remove(Set set, Pointer value) {
 			set->destroy_value(old_value);
 	}
 
+	SetNode moving_node = set->root;
+	if (temp_node != NULL)
+		check_upper_balance(set, temp_node, moving_node);
+	if (value_node_right_kid != NULL)
+		check_upper_balance(set, value_node_right_kid, moving_node);
+	if (value_node_left_kid != NULL)
+		check_upper_balance(set, value_node_left_kid, moving_node);
 	return removed;
 }
 
@@ -654,6 +695,9 @@ static bool node_is_bst(SetNode node, CompareFunc compare) {
 		res = res && compare(node->left->value, node->value) < 0 && compare(node_find_max(node->left)->value, node->value) < 0;
 	if(node->right != NULL)
 		res = res && compare(node->right->value, node->value) > 0 && compare(node_find_min(node->right)->value, node->value) > 0;
+
+	// Το ύψος είναι σωστό
+	res = res && node->height == 1 + int_max(node_height(node->left), node_height(node->right));
 
 	return res &&
 		node_is_bst(node->left, compare) &&

@@ -289,8 +289,8 @@ static void node_destroy(SetNode node, DestroyFunc destroy_value) {
 	free(node);
 }
 
+// Επιστρέφει τον πατέρα κάθε node, αν το node είναι το set->root επιστρέφει το set->root
 
-// returns the father of each node, if node is the set->root returns the set->root
 SetNode find_node_father(Set set, SetNode node)  {
 	SetNode moving_node = set->root;
 	int activate = 1;
@@ -314,6 +314,8 @@ SetNode find_node_father(Set set, SetNode node)  {
 	return parent_node;
 }
 
+// Ελέγχει αν το το υποδέντρο με root το node είναι balanced
+
 bool check_balanced(SetNode node)  {
 	if (node->height >= 4)  {
 		if (node->right == NULL)  {
@@ -332,9 +334,10 @@ bool check_balanced(SetNode node)  {
 		return true;
 }
 
+// Κάνει update το height και το size του path από το moving_node μέχρι το target_node
+
 void path_update_height_and_size(Set set, SetNode moving_node, SetNode target_node)  {
-	
-	
+
 	int compare_value = set->compare(moving_node->value, target_node->value);
 
 	if (compare_value == 0)  {
@@ -354,8 +357,12 @@ void path_update_height_and_size(Set set, SetNode moving_node, SetNode target_no
 	node_update_size(moving_node);
 }
 
-void balance_tree(Set set, SetNode node)  {
+// Κάνει balance το δέντρο ή υποδέντρο, με root το node, αντιγράφονας τα nodes του
+// σε ένα vector και καλεί την συνάρτηση set_create_from_sorted_values για να φτιάξει
+// ένα 2ο set που είναι ισοζυγισμένο δέντρο που αντικαθιστά το προηγούμενο
 
+
+void balance_tree(Set set, SetNode node)  {
 
 	SetNode father_node = find_node_father(set, node);
 	int compare_value = set->compare(father_node->value, node->value);
@@ -376,7 +383,6 @@ void balance_tree(Set set, SetNode node)  {
 		}
 	}
 
-	
 	Set temp_set = set_create_from_sorted_values(set->compare, NULL, values);
 
 	if (compare_value == 0)  {
@@ -395,6 +401,9 @@ void balance_tree(Set set, SetNode node)  {
 
 	vector_destroy(values);
 }
+
+// Ελέγχει αν το path από το moving_node μέχρι το target_node είναι balanced trees και αν όχι
+// διορθώνει το υψολότερο δέντρο ή υποδέντρο που δεν είναι balanced
 
 bool check_upper_balance(Set set, SetNode target_node, SetNode moving_node)  {
 	if (moving_node != NULL && moving_node->height >= 4)  {
@@ -438,6 +447,7 @@ Set set_create(CompareFunc compare, DestroyFunc destroy_value) {
 	return set;
 }
 
+// Αναδρομική συνάρτηση που βοηθάει την set_create_from_sorted_values
 
 SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer start, Pointer end, Pointer start_next, Pointer end_next)  {
 	int pos_start = 0;
@@ -445,7 +455,6 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	int i = 0;
 
 	// to find where start and end is
-
 	for (VectorNode node = vector_first(values) ; node != VECTOR_EOF ; node = vector_next(values, node))  {
 		SetNode node_set = vector_node_value(values, node);
 		SetNode start_set = start;
@@ -474,14 +483,16 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 		return NULL;
 	}
 
-	// recursive work
+	// find the middle
 	int middle = (pos_start + pos_end) / 2;
 	
 	SetNode node_for_root = vector_get_at(values, middle);
 	SetNode root = node_for_root;
 
+	// increase set size by one
 	set->size += 1;
 
+	// find new_end and new_end_next
 	Pointer new_end;
 	Pointer new_end_next;
 	if (middle == 0)  {
@@ -493,6 +504,7 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 		new_end_next = vector_get_at(values, middle);
 	}
 
+	// find new_start and new_start_next
 	Pointer new_start;
 	Pointer new_start_next;
 	if (middle == vector_size(values) - 1)  {
@@ -508,12 +520,8 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 			new_start_next = vector_get_at(values, middle + 2);
 		}
 	}
-	
-	SetNode node_for_new_end = new_end;
-		if (node_for_new_end == NULL)  {}	// to not show errors
-	SetNode node_for_new_start = new_start;
-		if (node_for_new_start == NULL)  {}		// to not show errors	
 
+	// recursive work
 	if (set->size < vector_size(values))  {
 		if (new_end != NULL)  {
 			root->left = init_set_from_vector_with_balanced_tree(set, values, start, new_end, new_start, new_end_next);
@@ -537,6 +545,8 @@ SetNode init_set_from_vector_with_balanced_tree(Set set, Vector values, Pointer 
 	node_update_size(root);
 	return root;
 }
+
+// Φτιάχνει ένα set από ένα vector με Pointers σε κόμβους SetNode, που είναι βαλμένοι σε αύξουσα σειρά 
 
 Set set_create_from_sorted_values(CompareFunc compare, DestroyFunc destroy_value, Vector values) {
 	Set set = set_create(compare, NULL);

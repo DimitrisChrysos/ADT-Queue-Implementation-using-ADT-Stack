@@ -2,7 +2,7 @@
 
 ## 2022 Project 2
 
-Εκφώνηση: https://k08.chatzi.org/projects/project2/
+Εκφώνηση: https://k08.chatzi.org/2022/projects/project2/
 
 
 ### Προσωπικά στοιχεία
@@ -100,7 +100,7 @@ f) ./queue_benchmark_using_list amortized
 - queue_benchmark_using_stack real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(n), που το n συνέχεια αυξάνεται κάτα ένα.
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20153529.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20153529.png?raw=true)
 
 - queue_benchmark_using_stack amortized:
 είναι λογικό καθώς έχει πολυπλοκότητα O(n) και O(1) και διαίρούνται τα steps με n, που το n συνέχεια αυξάνεται κάτα ένα.
@@ -110,22 +110,22 @@ temp_node
 - queue_benchmark_using_stack_alt real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(n) όταν αδειάζει η remove και άλλες O(1) όταν δεν είναι άδεια
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20155910.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20155910.png?raw=true)
 
 - queue_benchmark_using_stack_alt amortized:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1), αφού κυριαρχή η πολυπλότητα σε μεγάλο χρόνο O(1) και διαιρείται με n, που το n συνέχεια αυξάνεται κάτα ένα.
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160324.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160324.png?raw=true)
 
 - queue_benchmark_using_list real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1).
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160525.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160525.png?raw=true)
 
 - queue_benchmark_using_list amortized:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1).
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160812.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-17%20160812.png?raw=true)
 
 
 - Bonus:
@@ -142,9 +142,9 @@ dir .../programs/vector_benchmark είναι:
 - vector_benchmark real:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1).
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-19%20143330.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-19%20143330.png?raw=true)
 
 - vector_benchmark amortized:
 είναι λογικό καθώς έχει πολυπλοκότητα O(1).
 
-![alt text](https://github.com/chatziko-k08/2022-project-2-DimitrisChrysos/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-19%20142915.png)
+![alt text](https://github.com/DimitrisChrysos/Data-Structures-project2/blob/master/programs/queue_benchmark/images_for_README/Screenshot%202022-05-19%20142915.png?raw=true)
